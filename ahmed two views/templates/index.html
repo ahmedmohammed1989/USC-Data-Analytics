@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Spotify Audio Features</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body background="https://columbiaairport.com/wp-content/uploads/2015/12/CAE-Website-Full-Background-Texture1902x1200-9.jpg">
+    <h1 style="font-family:Arial;">Spotify Audio Feature Descriptions</h1>
+    <h4 style="font-family:Arial;">
+    Danceability - The higher the value, the easier it is to dance to this song.<br>
+    Beats Per Minute (BPM) - The tempo of the song. <br>
+    Energy - The energy of a song - the higher the value, the more energtic.<br>
+        Valence - The higher the value, the more positive mood for the song.
+    <br> Acoustic - The higher the value the more acoustic the song is.
+    Loudness - The higher the value, the louder
+    the song. <br>
+    </h4>
+    
+    <select id="selDataset" onchange="getData(this.value)">
+        <option value="dance">Danceability</option>
+        <option value="bpm">BPM</option>
+        <option value="energy">Energy</option>
+        <option value="valence">Valence</option>
+        <option value="acoustic">Acoustic</option>
+        <option value="loud">Loudness</option>
+
+    </select>
+    <div id="bar"></div>
+    <script>
+       var default_url = "/dance";
+        Plotly.d3.json(default_url, function (error, response) {
+            if (error) return console.warn(error);
+            var data = [response];
+            var layout = {
+                title: 'Average By Region',
+                margin: { t: 30, b: 100 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)'
+                }
+            Plotly.plot("bar", data, layout)
+        })
+
+        function updatePlotly(newdata) {
+            var Bar = document.getElementById('bar');
+            Plotly.restyle(Bar, 'x', [newdata.x])
+            Plotly.restyle(Bar, 'y', [newdata.y])
+        }
+
+        // Get new data whenever the dropdown selection changes
+        function getData(route) {
+            console.log(route);
+            Plotly.d3.json(`/${route}`, function (error, data) {
+                console.log("newdata", data);
+                updatePlotly(data);
+            });
+        }
+    </script>
+
+    <div id="myDiv" align='center'></div>
+    <script>
+        var default_url = "/test";
+            Plotly.d3.json(default_url, function (error, response) {
+                if (error) return console.warn(error);
+                var data = response;
+                var layout = {
+                    autosize: false,
+                    width: 800,
+                    height: 800,
+                    title: "Audio features (AVG) of Top 10 most streamed last year",
+                    font: {
+                            size: 15
+                        },
+                        showlegend: false,
+                        polar: {
+                            bgcolor: "rgb(223, 223, 223)",
+                            angularaxis: {
+                                tickwidth: 2,
+                                linewidth: 3,
+                                layer: "above traces"
+                            },
+                            radialaxis: {
+                                side: "counterclockwise",
+                                showline: true,
+                                linewidth: 2,
+                                tickwidth: 2,
+                                gridcolor: "white",
+                                gridwidth: 2
+                            }
+                        },
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    showlegend: true,
+                    orientation: -90
+                }
+        Plotly.plot("myDiv", data, layout)})
+    </script>
+    <div id="my1Div"></div>
+
+    </script>
+    
+    <div id="scatterPolar"></div>
+    <script>
+        var scatterPolar_server = "/scatter_polar";
+        function initiate_scatter() {
+            Plotly.d3.json(scatterPolar_server, function (error, response) {
+                if (error) return console.warn(error);
+                var data = response;
+                var layout =
+                    {
+                        // autosize: false,
+                        // width: 800,
+                        // height: 800,
+                        showlegend: true,
+                        polar:
+                            {
+                                domain: {
+                                    x: [0, 0.46],
+                                    y: [0.56, 1]
+                                },
+                                radialaxis: {
+                                    angle: 360
+                                },
+                                angularaxis: {
+                                    direction: "clockwise",
+                                    period: 1
+                                }
+                            },
+                        height: 1500,
+                        width: 1500,
+                    }
+                Plotly.newPlot('scatterPolar', data, layout)
+            })
+        }
+        initiate_scatter();
+    </script>
+
+</body>
+</html>
